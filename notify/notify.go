@@ -9,7 +9,7 @@ const previewMaxRunes = 80
 
 // Send displays a desktop notification via notify-send.
 func Send(summary, body string) error {
-	cmd := exec.Command("notify-send", "--app-name=clarocr", "--icon=edit-copy", summary, body)
+	cmd := exec.Command("notify-send", "--icon=edit-copy", "--expire-time=4000", summary, body)
 	return cmd.Run()
 }
 
