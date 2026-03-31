@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+echo ""
+echo "clarocr instalado com sucesso!"
+echo ""
+echo "Para configurar o autostart e o atalho de teclado, execute:"
+echo "  clarocr install"
+echo ""
