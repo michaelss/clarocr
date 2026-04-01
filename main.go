@@ -38,6 +38,9 @@ func main() {
 		if err := installAutostart(); err != nil {
 			log.Fatal(err)
 		}
+		if err := installShortcut(); err != nil {
+			fmt.Fprintf(os.Stderr, "Aviso: não foi possível configurar atalho de teclado: %v\n", err)
+		}
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command: %s\n", os.Args[1])
 		printUsage()
@@ -68,14 +71,24 @@ func runCaptureOrLog(lang string) {
 }
 
 func runCapture(lang string) error {
-	region, err := capture.SelectRegion()
-	if err != nil {
-		return fmt.Errorf("region selection cancelled or failed: %w", err)
-	}
+	var imagePath string
+	var err error
 
-	imagePath, err := capture.CaptureRegion(region)
-	if err != nil {
-		return fmt.Errorf("screen capture failed: %w", err)
+	if capture.IsGnomeWayland() {
+		imagePath, err = capture.CaptureGnomeScreenshot()
+		if err != nil {
+			return fmt.Errorf("screen capture failed: %w", err)
+		}
+	} else {
+		var region capture.Region
+		region, err = capture.SelectRegion()
+		if err != nil {
+			return fmt.Errorf("region selection cancelled or failed: %w", err)
+		}
+		imagePath, err = capture.CaptureRegion(region)
+		if err != nil {
+			return fmt.Errorf("screen capture failed: %w", err)
+		}
 	}
 	defer os.Remove(imagePath)
 

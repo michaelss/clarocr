@@ -45,3 +45,21 @@ func captureWithMaim(r Region, dest string) error {
 	}
 	return nil
 }
+
+// CaptureGnomeScreenshot performs interactive region selection and capture
+// using gnome-screenshot, which works on GNOME Wayland (Mutter).
+// The caller is responsible for removing the returned file after use.
+func CaptureGnomeScreenshot() (string, error) {
+	f, err := os.CreateTemp("", "clarocr_*.png")
+	if err != nil {
+		return "", fmt.Errorf("failed to create temp file: %w", err)
+	}
+	f.Close()
+
+	cmd := exec.Command("gnome-screenshot", "-a", "-f", f.Name())
+	if out, err := cmd.CombinedOutput(); err != nil {
+		os.Remove(f.Name())
+		return "", fmt.Errorf("gnome-screenshot failed: %w\n%s", err, out)
+	}
+	return f.Name(), nil
+}

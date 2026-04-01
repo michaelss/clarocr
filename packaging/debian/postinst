@@ -1,9 +1,16 @@
 #!/bin/sh
 set -e
 
-echo ""
-echo "clarocr instalado com sucesso!"
-echo ""
-echo "Para configurar o autostart e o atalho de teclado, execute:"
-echo "  clarocr install"
-echo ""
+if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
+    USER_UID=$(id -u "$SUDO_USER")
+    DBUS_ADDR="unix:path=/run/user/$USER_UID/bus"
+    echo "Configurando autostart e atalho de teclado para $SUDO_USER..."
+    su -c "DBUS_SESSION_BUS_ADDRESS=$DBUS_ADDR /usr/local/bin/clarocr install" "$SUDO_USER" || true
+else
+    echo ""
+    echo "clarocr instalado com sucesso!"
+    echo ""
+    echo "Para configurar o autostart e o atalho Super+Shift+T, execute:"
+    echo "  clarocr install"
+    echo ""
+fi

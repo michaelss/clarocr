@@ -2,7 +2,7 @@ Package: clarocr
 Version: 1.0.0
 Architecture: amd64
 Maintainer: Unknown <unknown@example.com>
-Depends: libtesseract5, tesseract-ocr, tesseract-ocr-por, tesseract-ocr-eng, slop, maim, xclip, libayatana-appindicator3-1, libnotify-bin
+Depends: libtesseract5, tesseract-ocr, tesseract-ocr-por, tesseract-ocr-eng, slop, maim, xclip, slurp, grim, wl-clipboard, gnome-screenshot, libayatana-appindicator3-1, libnotify-bin
 Description: Captura e extrai texto da tela via OCR
  Ferramenta para Linux/GNOME que permite selecionar uma região da tela
  e extrair o texto presente nela via OCR (Tesseract), copiando

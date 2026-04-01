@@ -4,12 +4,16 @@ BINARY   := clarocr
 DEB_DIR  := dist/$(BINARY)_$(VERSION)_$(ARCH)
 DEB_FILE := dist/$(BINARY)_$(VERSION)_$(ARCH).deb
 
-.PHONY: build deb clean
+.PHONY: build deb deps clean
+
+deps:
+	@which go > /dev/null 2>&1 || (sudo apt-get update && sudo apt-get install -y golang-go)
+	sudo apt-get install -y libtesseract-dev libleptonica-dev libayatana-appindicator3-dev
 
 build:
 	go build -o $(BINARY) .
 
-deb: build
+deb: deps build
 	rm -rf $(DEB_DIR)
 	mkdir -p $(DEB_DIR)/DEBIAN
 	mkdir -p $(DEB_DIR)/usr/local/bin
@@ -21,7 +25,7 @@ deb: build
 	dpkg-deb --build $(DEB_DIR) $(DEB_FILE)
 	@echo ""
 	@echo "Pacote gerado: $(DEB_FILE)"
-	@echo "Para instalar: sudo dpkg -i $(DEB_FILE)"
+	@echo "Para instalar: sudo apt install ./$(DEB_FILE)"
 
 clean:
 	rm -rf $(BINARY) dist/
