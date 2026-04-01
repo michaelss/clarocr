@@ -66,7 +66,7 @@ func runDaemon(lang string) {
 func runCaptureOrLog(lang string) {
 	if err := runCapture(lang); err != nil {
 		log.Println("capture error:", err)
-		notify.Send("clarocr — Erro", err.Error())
+		notify.Send("ClarOCR", "Erro")
 	}
 }
 
@@ -98,7 +98,7 @@ func runCapture(lang string) error {
 	}
 
 	if text == "" {
-		notify.Send("clarocr", "Nenhum texto encontrado na região selecionada.")
+		notify.Send("ClarOCR", "Nenhum texto encontrado")
 		return nil
 	}
 
@@ -106,6 +106,6 @@ func runCapture(lang string) error {
 		return fmt.Errorf("clipboard copy failed: %w", err)
 	}
 
-	notify.Send("Texto copiado!", notify.TextPreview(text))
+	notify.Send("ClarOCR", "Texto copiado!")
 	return nil
 }
