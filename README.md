@@ -2,6 +2,8 @@
 
 Ferramenta para Linux/GNOME que permite selecionar uma região da tela e extrair o texto presente nela via OCR, copiando o resultado automaticamente para a área de transferência.
 
+![Demonstração](https://github.com/michaelss/clarocr/blob/master/ClarOCR.gif)
+
 Casos de uso típicos:
 - Extrair texto de vídeos pausados no navegador
 - Capturar texto de imagens ou PDFs exibidos na tela
