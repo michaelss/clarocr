@@ -1,4 +1,4 @@
-VERSION  ?= 1.0.0
+VERSION  ?= 0.0.1
 ARCH     := amd64
 BINARY   := clarocr
 DEB_DIR  := dist/$(BINARY)_$(VERSION)_$(ARCH)

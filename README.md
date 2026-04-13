@@ -15,6 +15,12 @@ Casos de uso típicos:
 - **Desktop:** GNOME
 - **Display server:** X11 e Wayland (detecção automática)
 
+## Instalação
+
+1. Baixe o arquivo `.deb` na área "Releases", ao lado.
+2. Instale com um duplo clique sobre o arquivo ou com o comando `sudo apt install <arquivo>.deb`.
+
+
 ## Tecnologias
 
 | Componente | Tecnologia |
