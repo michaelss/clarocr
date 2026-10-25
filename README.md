@@ -17,8 +17,9 @@ Casos de uso típicos:
 
 ## Instalação
 
-1. Baixe o arquivo `.deb` na área "Releases", ao lado.
-2. Instale com um duplo clique sobre o arquivo ou com o comando `sudo apt install <arquivo>.deb`.
+1. Baixe o pacote na área "Releases", ao lado: `.deb` para Debian/Ubuntu ou `.rpm` para Fedora 44 x86_64.
+2. Instale com `sudo apt install ./<arquivo>.deb` ou `sudo dnf install ./<arquivo>.rpm`.
+3. Na sessão gráfica, execute `clarocr install` para configurar o autostart e o atalho Super+Shift+T.
 
 
 ## Tecnologias
@@ -78,6 +79,58 @@ make deb VERSION=1.2.0
 ```
 
 O pacote gerado estará em `dist/clarocr_<versão>_amd64.deb`.
+
+### Pacote RPM (Fedora 44 x86_64)
+
+Os comandos têm funções diferentes:
+
+- `make rpm-deps` instala as ferramentas e bibliotecas necessárias para gerar
+  o RPM, usando `sudo dnf`. Execute no primeiro uso ou quando faltarem
+  dependências de compilação. Esse comando não gera o pacote.
+- `make rpm` compila a aplicação, executa as verificações e gera o pacote em
+  `dist/`. Não instala dependências nem executa `sudo`.
+
+No primeiro uso:
+
+```bash
+make rpm-deps
+make rpm
+```
+
+O pacote padrão será `dist/clarocr-0.0.1-1.fc44.x86_64.rpm`.
+Nas próximas compilações, basta executar `make rpm`.
+
+Para definir a versão da aplicação e a revisão do pacote:
+
+```bash
+make rpm VERSION=1.2.0 RELEASE=1
+```
+
+O resultado estará em `dist/clarocr-1.2.0-1.fc44.x86_64.rpm`. `VERSION` aceita
+números separados por pontos, com padrão `0.0.1`; `RELEASE` é um inteiro
+positivo, com padrão `1`. Incremente `RELEASE` ao revisar o empacotamento
+sem alterar a versão da aplicação.
+
+Compile no Fedora 44 x86_64: o binário usa CGO e depende das bibliotecas dessa
+distribuição. O empacotamento prepara os módulos Go em `dist/` (com acesso à
+internet ou cache Go preenchido); a compilação e as verificações do RPM usam
+esses módulos vendorizados, sem baixar dependências Go. Não há garantia de
+compatibilidade com outras versões do Fedora ou outras distribuições RPM.
+
+```bash
+sudo dnf install ./dist/clarocr-1.2.0-1.fc44.x86_64.rpm
+clarocr install
+```
+
+O RPM instala o executável em `/usr/bin/clarocr`. A configuração de autostart
+e atalho é feita pelo próprio usuário, sem scripts de instalação que alterem
+a sessão gráfica. Para o ícone na bandeja do GNOME, instale também a extensão
+AppIndicator (`sudo dnf install gnome-shell-extension-appindicator`).
+
+O projeto não declara uma licença aberta. O RPM usa `LicenseRef-Proprietary`
+para o código da aplicação, declara também as licenças dos componentes
+incorporados e inclui os avisos de licença do Go e de suas dependências.
+Os pacotes são distribuídos sem assinatura RPM e sem repositório DNF próprio.
 
 ## Instalação via .deb
 
@@ -148,7 +201,10 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 
 ## Release via GitHub Actions
 
-Ao criar uma tag `v*`, o workflow em `.github/workflows/release.yml` compila e publica o `.deb` automaticamente no GitHub Releases:
+Ao criar uma tag numérica `v*` (por exemplo, `v1.0.0`), o workflow em
+`.github/workflows/release.yml` compila o `.deb` no Ubuntu e o `.rpm` em um
+contêiner Fedora 44. Após os dois builds passarem, publica ambos na mesma
+release do GitHub:
 
 ```bash
 git tag v1.0.0

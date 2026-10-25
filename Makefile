@@ -1,10 +1,11 @@
 VERSION  ?= 0.0.1
+RELEASE  ?= 1
 ARCH     := amd64
 BINARY   := clarocr
 DEB_DIR  := dist/$(BINARY)_$(VERSION)_$(ARCH)
 DEB_FILE := dist/$(BINARY)_$(VERSION)_$(ARCH).deb
 
-.PHONY: build deb deps clean
+.PHONY: build deb deps rpm rpm-deps clean
 
 deps:
 	@which go > /dev/null 2>&1 || (sudo apt-get update && sudo apt-get install -y golang-go)
@@ -26,6 +27,13 @@ deb: deps build
 	@echo ""
 	@echo "Pacote gerado: $(DEB_FILE)"
 	@echo "Para instalar: sudo apt install ./$(DEB_FILE)"
+
+# Explicit setup: make rpm itself never installs packages or invokes sudo.
+rpm-deps:
+	sudo dnf install -y --setopt=install_weak_deps=False rpm-build golang gcc gcc-c++ make pkgconf-pkg-config tesseract-devel leptonica-devel libayatana-appindicator-gtk3-devel tar gzip findutils diffutils
+
+rpm:
+	@sh packaging/rpm/build.sh "$(VERSION)" "$(RELEASE)"
 
 clean:
 	rm -rf $(BINARY) dist/
