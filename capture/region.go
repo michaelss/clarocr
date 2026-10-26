@@ -17,7 +17,7 @@ func IsWayland() bool {
 
 // IsGnomeWayland returns true when running under GNOME on Wayland.
 // GNOME's Mutter compositor does not support zwlr_layer_shell_v1, so
-// slurp/grim cannot be used; gnome-screenshot must be used instead.
+// slurp/grim cannot be used; the desktop screenshot portal is used instead.
 func IsGnomeWayland() bool {
 	if !IsWayland() {
 		return false

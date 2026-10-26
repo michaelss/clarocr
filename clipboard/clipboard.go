@@ -19,17 +19,23 @@ func Copy(text string) error {
 func copyWayland(text string) error {
 	cmd := exec.Command("wl-copy")
 	cmd.Stdin = strings.NewReader(text)
-	if out, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("wl-copy failed: %w\n%s", err, out)
-	}
-	return nil
+	return runClipboardCommand(cmd)
 }
 
 func copyX11(text string) error {
 	cmd := exec.Command("xclip", "-selection", "clipboard")
 	cmd.Stdin = strings.NewReader(text)
-	if out, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("xclip failed: %w\n%s", err, out)
+	return runClipboardCommand(cmd)
+}
+
+func runClipboardCommand(cmd *exec.Cmd) error {
+	// Clipboard tools fork a background owner to keep the copied text available.
+	// Use file descriptors directly: CombinedOutput creates pipes, and Run then
+	// waits for EOF until that background owner also closes its inherited pipes.
+	cmd.Stdout = os.Stderr
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("%s failed: %w", cmd.Args[0], err)
 	}
 	return nil
 }

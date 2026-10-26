@@ -6,7 +6,7 @@ Name:           clarocr
 Version:        %{clarocr_version}
 Release:        %{clarocr_release}%{?dist}
 Summary:        Captura e extrai texto da tela via OCR
-License:        LicenseRef-Proprietary AND Apache-2.0 AND MIT AND BSD-3-Clause
+License:        LicenseRef-Proprietary AND Apache-2.0 AND MIT AND BSD-3-Clause AND BSD-2-Clause
 URL:            https://github.com/michaelss/clarocr
 Source0:        %{name}-%{version}.tar.gz
 ExclusiveArch:  x86_64
@@ -29,7 +29,8 @@ Requires:       xclip
 Requires:       slurp
 Requires:       grim
 Requires:       wl-clipboard
-Requires:       gnome-screenshot
+Requires:       xdg-desktop-portal
+Requires:       xdg-desktop-portal-gnome
 Requires:       libnotify
 Requires:       /usr/bin/gsettings
 

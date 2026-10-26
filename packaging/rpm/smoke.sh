@@ -14,7 +14,9 @@ fi
 # Flag help loads the executable and CGO libraries without opening a display.
 clarocr capture -h
 clarocr daemon -h
-for tool in tesseract slop maim xclip slurp grim wl-copy gnome-screenshot notify-send gsettings; do
+test -f /usr/share/licenses/clarocr/THIRD_PARTY_LICENSES/vendor/github.com/godbus/dbus/v5/LICENSE
+rpm -q xdg-desktop-portal xdg-desktop-portal-gnome
+for tool in tesseract slop maim xclip slurp grim wl-copy notify-send gsettings; do
     command -v "$tool"
 done
 tesseract --list-langs > /tmp/clarocr-langs.txt

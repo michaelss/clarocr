@@ -2,6 +2,7 @@ package capture
 
 import (
 	"fmt"
+	"image/png"
 	"os"
 	"os/exec"
 )
@@ -22,6 +23,10 @@ func CaptureRegion(r Region) (string, error) {
 		err = captureWithMaim(r, f.Name())
 	}
 	if err != nil {
+		os.Remove(f.Name())
+		return "", err
+	}
+	if err := validateScreenshot(f.Name()); err != nil {
 		os.Remove(f.Name())
 		return "", err
 	}
@@ -46,20 +51,15 @@ func captureWithMaim(r Region, dest string) error {
 	return nil
 }
 
-// CaptureGnomeScreenshot performs interactive region selection and capture
-// using gnome-screenshot, which works on GNOME Wayland (Mutter).
-// The caller is responsible for removing the returned file after use.
-func CaptureGnomeScreenshot() (string, error) {
-	f, err := os.CreateTemp("", "clarocr_*.png")
+// Decode the entire PNG: reading just its header would miss truncated captures.
+func validateScreenshot(path string) error {
+	f, err := os.Open(path)
 	if err != nil {
-		return "", fmt.Errorf("failed to create temp file: %w", err)
+		return fmt.Errorf("screenshot was not saved: %w", err)
 	}
-	f.Close()
-
-	cmd := exec.Command("gnome-screenshot", "-a", "-f", f.Name())
-	if out, err := cmd.CombinedOutput(); err != nil {
-		os.Remove(f.Name())
-		return "", fmt.Errorf("gnome-screenshot failed: %w\n%s", err, out)
+	defer f.Close()
+	if _, err := png.Decode(f); err != nil {
+		return fmt.Errorf("screenshot is empty or invalid (capture may have been cancelled): %w", err)
 	}
-	return f.Name(), nil
+	return nil
 }
