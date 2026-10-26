@@ -75,7 +75,7 @@ func runCapture(lang string) error {
 	var err error
 
 	if capture.IsGnomeWayland() {
-		imagePath, err = capture.CaptureGnomeScreenshot()
+		imagePath, err = capture.CapturePortalScreenshot()
 		if err != nil {
 			return fmt.Errorf("screen capture failed: %w", err)
 		}

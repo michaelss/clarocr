@@ -119,12 +119,16 @@ compatibilidade com outras versões do Fedora ou outras distribuições RPM.
 
 ```bash
 sudo dnf install ./dist/clarocr-1.2.0-1.fc44.x86_64.rpm
-clarocr install
 ```
 
-O RPM instala o executável em `/usr/bin/clarocr`. A configuração de autostart
-e atalho é feita pelo próprio usuário, sem scripts de instalação que alterem
-a sessão gráfica. Para o ícone na bandeja do GNOME, instale também a extensão
+O RPM instala o executável em `/usr/bin/clarocr`. Na primeira instalação,
+tenta executar `clarocr install` como o usuário identificado por `sudo` ou
+`pkexec`, usando o barramento da sessão desse usuário, para configurar o
+autostart e o atalho Super+Shift+T no GNOME. Atualizações preservam essas
+configurações. Se o instalador não identificar o usuário ou não houver sessão
+disponível, execute `clarocr install` manualmente na sessão gráfica, sem sudo.
+O daemon inicia no próximo login; para iniciá-lo agora, execute `clarocr daemon`.
+Para o ícone na bandeja do GNOME, instale também a extensão
 AppIndicator (`sudo dnf install gnome-shell-extension-appindicator`).
 
 O projeto não declara uma licença aberta. O RPM usa `LicenseRef-Proprietary`
